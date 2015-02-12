@@ -1,0 +1,6 @@
+  F1SA  F1NA          5.       10.                                             0
+  F1SB  F1NB          5.       10.                                             0
+  F1SC  F1NC          5.       10.                                             0
+  F1A   F1SA          5.       10.                                             0
+  F1B   F1SB          5.       10.                                             0
+  F1C   F1SC          5.       10.                                             0

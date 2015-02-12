@@ -1,0 +1,6 @@
+  MA    SA                                            MEASURING                1
+  MB    SB                                            MEASURING                1
+  MC    SC                                            MEASURING                1
+  MA    SA                                            MEASURING                1
+  MB    SB                                            MEASURING                1
+  MC    SC                                            MEASURING                1
