@@ -53,10 +53,15 @@ if strcmp('fault', Scenarios.eventCode)
         CreateFault(Scenarios,num, Dir, filename);
     end
     %now cleaning ATPEXEDir and codePath
-    CleanCodeAndATPDir(Dir,filename );
+    CleanTempFaultFiles(Dir,filename );
     fprintf('\r\n ******All Operations Completed Successfully******\r\n');
 elseif strcmp('light', Scenarios.eventCode)
-    
+    for num=1:Scenarios.numOfCases
+        LightStrike(Scenarios,num, Dir, filename);
+    end
+    %now cleaning ATPEXEDir and codePath
+    CleanTempLightFiles(Dir,filename );
+    fprintf('\r\n ******All Operations Completed Successfully******\r\n');
 else
     
 end

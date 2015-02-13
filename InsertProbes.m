@@ -1,4 +1,4 @@
-function[]=InsertProbes(codePath,sendingNode,receivingNode, filename)
+function[]=InsertProbes(codePath,sendingNode,receivingNode, filename, P)
 %This is a helper function for CreateFault. It inserts probes in the ATP file after the line
 %is split and nodes are renamed
 
@@ -24,10 +24,14 @@ function[]=InsertProbes(codePath,sendingNode,receivingNode, filename)
 %   MATLAB(R) or comparable environment containing parts covered
 %   under other licensing terms, the licensors of MATPOWER grant
 %   you additional permission to convey the resulting work.
-
-
-fid1=fopen(strcat(codePath,'\',filename,'04'), 'r');
-filePath2=strcat(codePath,'\',filename,'05');
+tempIndex1='04';
+tempIndex2='05';
+if strcmp('light', P.eventCode)
+    tempIndex1='05';
+    tempIndex2='06';
+end
+fid1=fopen(strcat(codePath,'\',filename,tempIndex1), 'r');
+filePath2=strcat(codePath,'\',filename,tempIndex2);
 fid2=fopen(filePath2,'w');
 sendingNodeLength=length(sendingNode);
 receivingNodeLength=length(receivingNode);
@@ -47,7 +51,7 @@ fclose(fid1);
 fclose(fid2);
 
 %Now changing the node names of the probes
-fid1=fopen(strcat(codePath,'\',filename,'05'), 'r+');
+fid1=fopen(strcat(codePath,'\',filename,tempIndex2), 'r+');
 while(~feof(fid1))
     line=fgets(fid1);
     if strcmp(line(1:7),'/SWITCH')
@@ -103,6 +107,7 @@ while(~feof(fid1))
         break;
     end
 end
+
 %Now inserting voltage probes at the origianl sending and receiving nodes.
 
 while(~feof(fid1))
@@ -125,9 +130,15 @@ while(~feof(fid1))
 end
 fclose(fid1);
 
+tempIndex1='05';
+tempIndex2='06';
+if strcmp('light', P.eventCode)
+    tempIndex1='06';
+    tempIndex2='07';
+end
 %Now creating another file for the other voltage probes
-fid1=fopen(strcat(codePath,'\',filename,'05'), 'r');
-filePath2=strcat(codePath,'\',filename,'06');
+fid1=fopen(strcat(codePath,'\',filename,tempIndex1), 'r');
+filePath2=strcat(codePath,'\',filename,tempIndex2);
 fid2=fopen(filePath2,'w');
 while(~feof(fid1))
     line=fgets(fid1);
@@ -140,14 +151,8 @@ while(~feof(fid1))
         line2(9:8+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'B');
         line2(15:14+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'C');
         fprintf(fid2,line2);
-%         line=fgets(fid1);
-%         line2=line(1:length(line)-2);
-%         line2(21:20+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'A');
-%         line2(27:26+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'B');
-%         line2(33:32+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'C');
-%         line2=strcat(line2,'\r\n');
-%         fprintf(fid2,line2);
     end
 end
 fclose(fid1);
 fclose(fid2);
+fclose('all');

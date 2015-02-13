@@ -1,6 +1,6 @@
-function[sendingNode,receivingNode]= DuplicateLine(codePath, LineToStudy, filename, P  )
-%This is  a helper function for CreateFault. It duplicates the line under study. It reads the line under
-%study and duplicates the line into two halves. 
+function[]=CleanTempFaultFiles(Dir,filename )
+% This is a hlper function that depetes all temporary fault files due to ATPMAT
+% operation
 
 %This file is part of ATPMAT
 %For more information, please go to https://bitbucket.org/ahmadmabdullah/atpmat
@@ -25,9 +25,27 @@ function[sendingNode,receivingNode]= DuplicateLine(codePath, LineToStudy, filena
 %   under other licensing terms, the licensors of MATPOWER grant
 %   you additional permission to convey the resulting work.
 
-if strcmp('fault',P.eventCode)
-    [sendingNode,receivingNode]=DuplicateFaultedLine(codePath, LineToStudy, filename);
-elseif strcmp('light',P.eventCode)
-    [sendingNode,receivingNode]=DuplicateLineStrokeByLightning(codePath, LineToStudy, filename);
-else
-end
+nameBase=strcat(Dir.codePath,'\',filename);
+    fileRM=strcat({'rm '},{nameBase});
+    system(fileRM{:});
+    fileRM=strcat({'rm '},{nameBase},'02');
+    system(fileRM{:});
+    fileRM=strcat({'rm '},{nameBase},'03');
+    system(fileRM{:});
+    fileRM=strcat({'rm '},{nameBase},'04');
+    system(fileRM{:});
+    fileRM=strcat({'rm '},{nameBase},'05');
+    system(fileRM{:});
+    fileRM=strcat({'rm '},{nameBase},'06');
+    system(fileRM{:});
+    cd(Dir.ATPEXEDir);
+    fileRM=strcat({'rm '},{strcat(Dir.ATPEXEDir,'\','tempFaultFile.pl4')});
+    system(fileRM{:});
+    fileRM=strcat({'rm '},{strcat(Dir.ATPEXEDir,'\','tempFaultFile.atp')});
+    system(fileRM{:});
+    fileRM=strcat({'rm '},{strcat(Dir.ATPEXEDir,'\','tempFaultFile.dbg')});
+    system(fileRM{:});
+    fileRM=strcat({'rm '},{strcat(Dir.ATPEXEDir,'\','tempFaultFile.lis')});
+    system(fileRM{:});
+    fileRM=strcat({'rm '},{strcat(Dir.ATPEXEDir,'\','output.txt')});
+    system(fileRM{:});

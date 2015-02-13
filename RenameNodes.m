@@ -1,4 +1,4 @@
-function[flag]= RenameNodes(codePath, sendingNode,receivingNode, filename)
+function[flag]= RenameNodes(codePath, sendingNode,receivingNode, filename , P) 
 %This is a helper function for CreateFault. It renames the nodes of the two halves of the
 %line . It also insert measuring current and voltage probes at the
 %terminals of the line
@@ -25,9 +25,13 @@ function[flag]= RenameNodes(codePath, sendingNode,receivingNode, filename)
 %   MATLAB(R) or comparable environment containing parts covered
 %   under other licensing terms, the licensors of MATPOWER grant
 %   you additional permission to convey the resulting work.
+if strcmp('fault', P.eventCode)
+    tempIX='04';
+elseif strcmp('light', P.eventCode)
+    tempIX='05';
+end
 
-
-fid1=fopen(strcat(codePath,'\',filename,'04'),'r+');
+fid1=fopen(strcat(codePath,'\',filename,tempIX),'r+');
 sendingNodeLength=length(sendingNode);
 receivingNodeLength=length(receivingNode);
 flag=0;

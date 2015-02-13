@@ -1,5 +1,4 @@
-function setSwitchOpenCloseTimes(fid1,closetime,opentime)
-% This is a helper function that write data in a specific format for switches in the ATP file
+function [s]= findImpulsePhC(fid1)
 
 
 %/*Copyright (c) 2014, Ahmad Abdullah
@@ -32,48 +31,13 @@ function setSwitchOpenCloseTimes(fid1,closetime,opentime)
 %   @author Ahmad Abdullah
 %   @e-mail ahmad.abdullah@ieee.org
 %
+x=fgetl(fid1);
+row_number=1;
+nodeName='15L13';
+s=0;
+while(~strcmp(nodeName,x(1:5))) 
+    row_number=row_number+1;
+    s=ftell(fid1);
+    x=fgetl(fid1);
+end
 
-s1=ftell(fid1); % current position
-s2=14; % shifting 1
-s3=10; % shifting 2
-fseek(fid1,s1+s2,-1);fprintf(fid1,'                     ');
-% ct
-if closetime<0
-   flag=floor(log10(-closetime));
-   switch flag
-   case 0
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%8.7f',closetime);
-   case {-1,-2,-3,-4,-5}
-      z1=sprintf('%9.8f',closetime);z2=[z1(1) z1(3:11)];
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%10s',z2);
-   otherwise
-      error('closetime is not in required bounds')
-   end
-elseif closetime>0
-   flag=floor(log10(closetime));
-   switch flag
-   case 0
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%9.8f',closetime);
-   case {-1,-2,-3,-4,-5}
-      z1=sprintf('%10.9f',closetime);z2=z1(2:11);
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%10s',z2);
-   otherwise
-      error('closetime is not in required bounds')
-   end
-else % ct==0
-   fseek(fid1,s1+s2,-1);fprintf(fid1,'%9.8f',closetime);
-end
-% ot
-if opentime<0
-   error('closetime is not in required bounds')
-end
-flag=floor(log10(opentime));
-switch flag
-case 0
-   fseek(fid1,s1+s2+s3,-1);fprintf(fid1,'%9.8f',opentime);
-case {-1,-2,-3,-4,-5}
-   z1=sprintf('%10.9f',opentime);z2=z1(2:11);
-   fseek(fid1,s1+s2+s3,-1);fprintf(fid1,'%10s',z2);
-otherwise
-   error('opentime is not in required bounds')
-end

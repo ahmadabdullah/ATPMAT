@@ -1,6 +1,4 @@
-function setSwitchOpenCloseTimes(fid1,closetime,opentime)
-% This is a helper function that write data in a specific format for switches in the ATP file
-
+function []=WriteValuesToImpulse(fid1, s,amplitude, startTime)
 
 %/*Copyright (c) 2014, Ahmad Abdullah
 % All rights reserved.
@@ -31,49 +29,31 @@ function setSwitchOpenCloseTimes(fid1,closetime,opentime)
 %
 %   @author Ahmad Abdullah
 %   @e-mail ahmad.abdullah@ieee.org
-%
 
-s1=ftell(fid1); % current position
-s2=14; % shifting 1
-s3=10; % shifting 2
-fseek(fid1,s1+s2,-1);fprintf(fid1,'                     ');
-% ct
-if closetime<0
-   flag=floor(log10(-closetime));
-   switch flag
-   case 0
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%8.7f',closetime);
-   case {-1,-2,-3,-4,-5}
-      z1=sprintf('%9.8f',closetime);z2=[z1(1) z1(3:11)];
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%10s',z2);
-   otherwise
-      error('closetime is not in required bounds')
-   end
-elseif closetime>0
-   flag=floor(log10(closetime));
-   switch flag
-   case 0
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%9.8f',closetime);
-   case {-1,-2,-3,-4,-5}
-      z1=sprintf('%10.9f',closetime);z2=z1(2:11);
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%10s',z2);
-   otherwise
-      error('closetime is not in required bounds')
-   end
-else % ct==0
-   fseek(fid1,s1+s2,-1);fprintf(fid1,'%9.8f',closetime);
+fseek(fid1,0,-1);
+s1=17;% this is the place to change the amplitude. Format is 1.E5 to mean 100000
+s2=66; %This goes to the time of the start of the wave
+fseek(fid1,s+s1-2,-1);%Now at starting of changing amplitude
+exponentAmp=floor(log10(amplitude));
+mantissa=amplitude/10^exponentAmp;
+mantissaSTR=num2str(mantissa);
+%mantissaToBeWritten='';
+if length(mantissaSTR)>=3
+    mantissaToBeWritten=mantissaSTR(1:3);
+else
+    mantissaToBeWritten=[mantissaSTR(1) '.0'];
 end
-% ot
-if opentime<0
-   error('closetime is not in required bounds')
+mantissaSTR2=strcat([mantissaToBeWritten 'E'],num2str(exponentAmp));
+fprintf(fid1,mantissaSTR2);%Now we just wrote the amplitude
+fseek(fid1,0,-1);
+fseek(fid1,s+s2-3,-1); %we are about to write the opening time
+startTimeSTR=num2str(startTime);
+zerosVec='0000';
+if length(startTimeSTR)<=6
+    startTimeSTR2=startTimeSTR(3:length(startTimeSTR));
+    startTimeSTR2=strcat(startTimeSTR2,zerosVec(1:(5-length(startTimeSTR2))));
+else
+    startTimeSTR2=startTimeSTR(3:7);
 end
-flag=floor(log10(opentime));
-switch flag
-case 0
-   fseek(fid1,s1+s2+s3,-1);fprintf(fid1,'%9.8f',opentime);
-case {-1,-2,-3,-4,-5}
-   z1=sprintf('%10.9f',opentime);z2=z1(2:11);
-   fseek(fid1,s1+s2+s3,-1);fprintf(fid1,'%10s',z2);
-otherwise
-   error('opentime is not in required bounds')
-end
+startTimeSTR2=strcat('0.',startTimeSTR2);
+fprintf(fid1,startTimeSTR2);

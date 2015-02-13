@@ -1,5 +1,5 @@
-function setSwitchOpenCloseTimes(fid1,closetime,opentime)
-% This is a helper function that write data in a specific format for switches in the ATP file
+function[]=SetPhaseStrokeByLightning(lighttype, fid1, amplitude,inctime)
+%adjusts which phase of line being hit by lightning
 
 
 %/*Copyright (c) 2014, Ahmad Abdullah
@@ -32,48 +32,21 @@ function setSwitchOpenCloseTimes(fid1,closetime,opentime)
 %   @author Ahmad Abdullah
 %   @e-mail ahmad.abdullah@ieee.org
 %
-
-s1=ftell(fid1); % current position
-s2=14; % shifting 1
-s3=10; % shifting 2
-fseek(fid1,s1+s2,-1);fprintf(fid1,'                     ');
-% ct
-if closetime<0
-   flag=floor(log10(-closetime));
-   switch flag
-   case 0
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%8.7f',closetime);
-   case {-1,-2,-3,-4,-5}
-      z1=sprintf('%9.8f',closetime);z2=[z1(1) z1(3:11)];
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%10s',z2);
-   otherwise
-      error('closetime is not in required bounds')
-   end
-elseif closetime>0
-   flag=floor(log10(closetime));
-   switch flag
-   case 0
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%9.8f',closetime);
-   case {-1,-2,-3,-4,-5}
-      z1=sprintf('%10.9f',closetime);z2=z1(2:11);
-      fseek(fid1,s1+s2,-1);fprintf(fid1,'%10s',z2);
-   otherwise
-      error('closetime is not in required bounds')
-   end
-else % ct==0
-   fseek(fid1,s1+s2,-1);fprintf(fid1,'%9.8f',closetime);
+switch lighttype
+    case {6}
+        [s]=findImpulsePhA(fid1);
+        WriteValuesToImpulse(fid1, s,amplitude, inctime);
+        getRowNumber('F1A','FA','SWITCH',fid1);
+        setSwitchOpenCloseTimes(fid1,inctime,0.1);
+    case {7}
+        [s]=findImpulsePhB(fid1);
+        WriteValuesToImpulse(fid1, s,amplitude, inctime);
+        getRowNumber('F1B','FB','SWITCH',fid1);
+        setSwitchOpenCloseTimes(fid1,inctime,0.1);
+    case {8}
+        [s]=findImpulsePhC(fid1);
+        WriteValuesToImpulse(fid1, s,amplitude, inctime);
+        getRowNumber('F1C','FC','SWITCH',fid1);
+        setSwitchOpenCloseTimes(fid1,inctime,0.1);
 end
-% ot
-if opentime<0
-   error('closetime is not in required bounds')
-end
-flag=floor(log10(opentime));
-switch flag
-case 0
-   fseek(fid1,s1+s2+s3,-1);fprintf(fid1,'%9.8f',opentime);
-case {-1,-2,-3,-4,-5}
-   z1=sprintf('%10.9f',opentime);z2=z1(2:11);
-   fseek(fid1,s1+s2+s3,-1);fprintf(fid1,'%10s',z2);
-otherwise
-   error('opentime is not in required bounds')
-end
+fseek(fid1,0,-1);

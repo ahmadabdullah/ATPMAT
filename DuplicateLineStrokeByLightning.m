@@ -1,6 +1,5 @@
-function[sendingNode,receivingNode]= DuplicateLine(codePath, LineToStudy, filename, P  )
-%This is  a helper function for CreateFault. It duplicates the line under study. It reads the line under
-%study and duplicates the line into two halves. 
+function[sendingNode,receivingNode]=DuplicateLineStrokeByLightning(codePath, LineToStudy, filename)
+%A helper funciton to duplicate line stroke by lightning
 
 %This file is part of ATPMAT
 %For more information, please go to https://bitbucket.org/ahmadmabdullah/atpmat
@@ -25,9 +24,32 @@ function[sendingNode,receivingNode]= DuplicateLine(codePath, LineToStudy, filena
 %   under other licensing terms, the licensors of MATPOWER grant
 %   you additional permission to convey the resulting work.
 
-if strcmp('fault',P.eventCode)
-    [sendingNode,receivingNode]=DuplicateFaultedLine(codePath, LineToStudy, filename);
-elseif strcmp('light',P.eventCode)
-    [sendingNode,receivingNode]=DuplicateLineStrokeByLightning(codePath, LineToStudy, filename);
-else
+fid1=fopen(strcat(codePath,'\',filename,'04'), 'r');
+fid2=fopen(strcat(codePath,'\',filename,'05'), 'w');
+[sendingNode, receivingNode]=strtok(LineToStudy,'-');
+sendingNode=strcat(sendingNode,'A');
+receivingNode=receivingNode(2:end);
+receivingNode=strcat(receivingNode,'A');
+
+while(~feof(fid1))
+    s=ftell(fid1);
+    line=fgets(fid1);
+    fprintf(fid2,line);
+    if length(line)>14
+        if((strcmp(strtrim(line(3:8)),sendingNode)&&strcmp(strtrim(line(9:14)),receivingNode))||(strcmp(strtrim(line(3:8)),receivingNode)&&strcmp(strtrim(line(9:14)),sendingNode)))
+            line=fgets(fid1);
+            fprintf(fid2,line);
+            line=fgets(fid1);
+            fprintf(fid2,line);
+            fseek(fid1,s,-1);
+            line=fgets(fid1);
+            fprintf(fid2,line);
+            line=fgets(fid1);
+            fprintf(fid2,line);
+            line=fgets(fid1);
+            fprintf(fid2,line);
+        end
+    end
 end
+fclose(fid1);
+fclose(fid2);
