@@ -35,20 +35,20 @@ while(~feof(fid1))
     line=fgets(fid1);
     if length(line)>14
         if((strcmp(strtrim(line(3:8)),sendingNode)&&strcmp(strtrim(line(9:14)),receivingNode))||(strcmp(strtrim(line(3:8)),receivingNode)&&strcmp(strtrim(line(9:14)),sendingNode)))
-            line(3:3+sendingNodeLength)=strcat('M',sendingNode); %adding M to current measuring node
-            line(9:9+receivingNodeLength)=strcat('M',receivingNode); %adding M to current measuring node
+            line(3:3+sendingNodeLength)=strcat('P',sendingNode); %adding M to current measuring node
+            line(9:9+receivingNodeLength)=strcat('P',receivingNode); %adding M to current measuring node
             fseek(fid1,s,-1);
             fprintf(fid1,line);
             s=ftell(fid1);
             line=fgets(fid1);
-            line(3:3+sendingNodeLength)=strcat('M',sendingNode(1:sendingNodeLength-1),'B'); %adding M to current measuring node
-            line(9:9+receivingNodeLength)=strcat('M',receivingNode(1:receivingNodeLength-1),'B'); 
+            line(3:3+sendingNodeLength)=strcat('P',sendingNode(1:sendingNodeLength-1),'B'); %adding M to current measuring node
+            line(9:9+receivingNodeLength)=strcat('P',receivingNode(1:receivingNodeLength-1),'B'); 
             fseek(fid1,s,-1);
             fprintf(fid1,line);
             s=ftell(fid1);
             line=fgets(fid1);
-            line(3:3+sendingNodeLength)=strcat('M',sendingNode(1:sendingNodeLength-1),'C'); %adding M to current measuring node
-            line(9:9+receivingNodeLength)=strcat('M',receivingNode(1:receivingNodeLength-1),'C'); 
+            line(3:3+sendingNodeLength)=strcat('P',sendingNode(1:sendingNodeLength-1),'C'); %adding M to current measuring node
+            line(9:9+receivingNodeLength)=strcat('P',receivingNode(1:receivingNodeLength-1),'C'); 
             fseek(fid1,s,-1);
             fprintf(fid1,line);
             flag=1;

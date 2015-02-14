@@ -26,7 +26,8 @@ function set_switchTime(fid1,ftyp,fint,BeginBus,EndBus)
 %   you additional permission to convey the resulting work.
 
 type='SWITCH';
-
+BeginBus=BeginBus(1:length(BeginBus)-1);
+EndBus=EndBus(1:length(EndBus)-1);
 fend=fint+0.5;
 BusA=strcat(BeginBus,'A');
 BusB=strcat(BeginBus,'B');

@@ -64,6 +64,9 @@ elseif strcmp('light', Scenarios.eventCode)
     fprintf('\r\n ******All Operations Completed Successfully******\r\n');
 else
     for num=1:Scenarios.numOfCases
-        EnergiseLine(Scenarios,num, Dir, filename);
+        SwitchLine(Scenarios,num, Dir, filename);
     end
+    %now cleaning ATPEXEDir and codePath
+    CleanTempEnergisationFiles(Dir,filename );
+    fprintf('\r\n ******All Operations Completed Successfully******\r\n');
 end

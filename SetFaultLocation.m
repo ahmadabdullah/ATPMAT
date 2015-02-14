@@ -59,7 +59,7 @@ rowNumber=getRowNumber(sendingEnd,faultBus,whichCard,fid1);
 fseek(fid1,0,-1);
 
 for i=1:rowNumber-1
-    fgetl(fid1); 
+    fgetl(fid1);
 end
 
 firstHalfLineLength=d*f_location;
@@ -72,7 +72,7 @@ whichCard='BRANCH';
 rowNumber=getRowNumber(receivingEnd,faultBus,whichCard,fid1);
 fseek(fid1,0,-1);
 for i=1:rowNumber-1
-    fgetl(fid1); 
+    fgetl(fid1);
 end
 secondHalfLineLength=d*(1-f_location);
 setLength(fid1,secondHalfLineLength);
