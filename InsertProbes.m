@@ -24,11 +24,17 @@ function[]=InsertProbes(codePath,sendingNode,receivingNode, filename, P)
 %   MATLAB(R) or comparable environment containing parts covered
 %   under other licensing terms, the licensors of MATPOWER grant
 %   you additional permission to convey the resulting work.
-tempIndex1='04';
-tempIndex2='05';
-if strcmp('light', P.eventCode)
+
+%which file to edit depending on the type of study sought
+if strcmp('fault', P.eventCode)
+    tempIndex1='04';
+    tempIndex2='05';
+elseif strcmp('light', P.eventCode)
     tempIndex1='05';
     tempIndex2='06';
+else
+    tempIndex1='';
+    tempIndex2='02';
 end
 fid1=fopen(strcat(codePath,'\',filename,tempIndex1), 'r');
 filePath2=strcat(codePath,'\',filename,tempIndex2);
@@ -41,10 +47,12 @@ ProbeLines=fileread(strcat(codePath,'\','CurrentProbes.txt'));
 while(~feof(fid1))
     line=fgets(fid1);
     fprintf(fid2,line);
-    if strcmp(line(1:7),'/SWITCH')
-        line=fgets(fid1);
-        fprintf(fid2,line);
-        fprintf(fid2,ProbeLines);
+    if length(line)>6
+        if strcmp(line(1:7),'/SWITCH')
+            line=fgets(fid1);
+            fprintf(fid2,line);
+            fprintf(fid2,ProbeLines);
+        end
     end
 end
 fclose(fid1);
@@ -112,30 +120,37 @@ end
 
 while(~feof(fid1))
     line=fgets(fid1);
-    if strcmp(line(1:7),'/OUTPUT')
-        s=ftell(fid1);
-        line=fgets(fid1);
-        lineLength=length(line);
-        %Now clearing the line
-        for i=1:lineLength-2 % -2 to execlude the last two special characters from writing
-            line(i)=' ';
+    if length(line)>6
+        if strcmp(line(1:7),'/OUTPUT')
+            s=ftell(fid1);
+            line=fgets(fid1);
+            lineLength=length(line);
+            %Now clearing the line
+            for i=1:lineLength-2 % -2 to execlude the last two special characters from writing
+                line(i)=' ';
+            end
+            %Now writing the measuring node to the first line
+            line(3:2+receivingNodeLength)=strcat(receivingNode(1:receivingNodeLength-1),'A');
+            line(9:8+receivingNodeLength)=strcat(receivingNode(1:receivingNodeLength-1),'B');
+            line(15:14+receivingNodeLength)=strcat(receivingNode(1:receivingNodeLength-1),'C');
+            fseek(fid1, s,-1);
+            fprintf(fid1,line);
         end
-        %Now writing the measuring node to the first line
-        line(3:2+receivingNodeLength)=strcat(receivingNode(1:receivingNodeLength-1),'A');
-        line(9:8+receivingNodeLength)=strcat(receivingNode(1:receivingNodeLength-1),'B');
-        line(15:14+receivingNodeLength)=strcat(receivingNode(1:receivingNodeLength-1),'C');
-        fseek(fid1, s,-1);
-        fprintf(fid1,line);
     end
 end
 fclose(fid1);
 
-tempIndex1='05';
-tempIndex2='06';
-if strcmp('light', P.eventCode)
+if strcmp('fault', P.eventCode)
+    tempIndex1='05';
+    tempIndex2='06';
+elseif strcmp('light', P.eventCode)
     tempIndex1='06';
     tempIndex2='07';
+else
+    tempIndex1='02';
+    tempIndex2='03';
 end
+
 %Now creating another file for the other voltage probes
 fid1=fopen(strcat(codePath,'\',filename,tempIndex1), 'r');
 filePath2=strcat(codePath,'\',filename,tempIndex2);
@@ -143,14 +158,16 @@ fid2=fopen(filePath2,'w');
 while(~feof(fid1))
     line=fgets(fid1);
     fprintf(fid2,line);
-    if strcmp(line(1:7),'/OUTPUT')
-        line=fgets(fid1);
-        fprintf(fid2,line);
-        line2=line;
-        line2(3:2+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'A');
-        line2(9:8+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'B');
-        line2(15:14+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'C');
-        fprintf(fid2,line2);
+    if length(line)>6
+        if strcmp(line(1:7),'/OUTPUT')
+            line=fgets(fid1);
+            fprintf(fid2,line);
+            line2=line;
+            line2(3:2+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'A');
+            line2(9:8+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'B');
+            line2(15:14+sendingNodeLength)=strcat(sendingNode(1:sendingNodeLength-1),'C');
+            fprintf(fid2,line2);
+        end
     end
 end
 fclose(fid1);

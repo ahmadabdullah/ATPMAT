@@ -1,7 +1,6 @@
 function[]=LightStrike(P,n, Dir, filename)
 %Strike a line by a lightning strike
 
-
 %This file is part of ATPMAT
 %For more information, please go to https://bitbucket.org/ahmadmabdullah/atpmat
 % ATPMAT is free software: you can redistribute it and/or modify
@@ -30,8 +29,8 @@ fprintf('\n')
 %create a temporary file for simulation
 cd(Dir.codePath);
 
-%The following function inserts the fault block given the IPST paper
-%into the file 'TempFaultFile'
+%The following function inserts the lightning block given the IPST paper
+%into the file 'TempLightningFile'
 InsertLightningBlock(Dir.codePath,filename);
 
 %The following function duplicates the line aunder study.

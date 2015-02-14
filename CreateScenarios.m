@@ -13,7 +13,8 @@ function [P]=CreateScenarios(startTime, endTime, eventCode, eventSamplingTime, e
 % at 60% and 90% of the line then he can enter [60 90] as an eventDistance
 % vector. The minimum is 5% and the maximum is 95%. In case of line
 % energisation the distance has to be either 0 or 100 to convey which end of
-% the line is being energized.
+% the line is being energized. Currently ony 3 phase switching is supported
+% so the faultype has to be 12 or 5. 
 %
 % eventAngle is another vector specifying the incibient angle of the event.
 % If a user want to create a fault at 30 degrees and 60 degrees then he

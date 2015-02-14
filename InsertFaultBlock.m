@@ -34,13 +34,15 @@ fid2=fopen(filePath2,'w');
 while(~feof(fid1))
     line=fgets(fid1);
     fprintf(fid2,line);
-    if strcmp(line(1:7),'/BRANCH')
-        line=fgets(fid1);
-        fprintf(fid2,line);
-        line=fgets(fid1);
-        fprintf(fid2,line);
-        BranchLines=fileread(strcat(codePath,'\','FaultBlockBranches.txt'));
-        fprintf(fid2,BranchLines);
+    if length(line)>6
+        if strcmp(line(1:7),'/BRANCH')
+            line=fgets(fid1);
+            fprintf(fid2,line);
+            line=fgets(fid1);
+            fprintf(fid2,line);
+            BranchLines=fileread(strcat(codePath,'\','FaultBlockBranches.txt'));
+            fprintf(fid2,BranchLines);
+        end
     end
 end
 fclose(fid1);
@@ -53,16 +55,18 @@ flag=0;
 while(~feof(fid2))
     line=fgets(fid2);
     fprintf(fid3,line);
-    if strcmp(line(1:7),'/SWITCH')
-        line=fgets(fid2);
-        fprintf(fid3,line);
-        BranchLines=fileread(strcat(codePath,'\','FaultBlockSwitches.txt'));
-        fprintf(fid3,BranchLines);
-        flag=1;
+    if length(line)>6
+        if strcmp(line(1:7),'/SWITCH')
+            line=fgets(fid2);
+            fprintf(fid3,line);
+            BranchLines=fileread(strcat(codePath,'\','FaultBlockSwitches.txt'));
+            fprintf(fid3,BranchLines);
+            flag=1;
+        end
     end
 end
 fclose(fid2);
 fclose(fid3);
-if flag==0 % Means no switches were present in the file 
+if flag==0 % Means no switches were present in the file
     error('Original ATP file does not have any switches!');
 end
