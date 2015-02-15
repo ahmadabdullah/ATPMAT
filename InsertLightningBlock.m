@@ -34,13 +34,15 @@ fid2=fopen(filePath2,'w');
 while(~feof(fid1))
     line=fgets(fid1);
     fprintf(fid2,line);
-    if strcmp(line(1:7),'/BRANCH')
-        line=fgets(fid1);
-        fprintf(fid2,line);
-        line=fgets(fid1);
-        fprintf(fid2,line);
-        BranchLines=fileread(strcat(codePath,'\','LightningBlockBranches.txt'));
-        fprintf(fid2,BranchLines);
+    if length(line)>6
+        if strcmp(line(1:7),'/BRANCH')
+            line=fgets(fid1);
+            fprintf(fid2,line);
+            line=fgets(fid1);
+            fprintf(fid2,line);
+            BranchLines=fileread(strcat(codePath,'\','LightningBlockBranches.txt'));
+            fprintf(fid2,BranchLines);
+        end
     end
 end
 fclose(fid1);
@@ -52,11 +54,13 @@ fid2=fopen(filePath2,'r');
 while(~feof(fid2))
     line=fgets(fid2);
     fprintf(fid3,line);
-    if strcmp(line(1:7),'/SWITCH')
-        line=fgets(fid2);
-        fprintf(fid3,line);
-        BranchLines=fileread(strcat(codePath,'\','LightningBlockSwitches.txt'));
-        fprintf(fid3,BranchLines);
+    if length(line)>6
+        if strcmp(line(1:7),'/SWITCH')
+            line=fgets(fid2);
+            fprintf(fid3,line);
+            BranchLines=fileread(strcat(codePath,'\','LightningBlockSwitches.txt'));
+            fprintf(fid3,BranchLines);
+        end
     end
 end
 fclose(fid2);
@@ -69,11 +73,13 @@ fid3=fopen(filePath3,'r');
 while(~feof(fid3))
     line=fgets(fid3);
     fprintf(fid4,line);
-    if strcmp(line(1:7),'/SOURCE')
-        line=fgets(fid3);
-        fprintf(fid4,line);
-        BranchLines=fileread(strcat(codePath,'\','LightningBlockSources.txt'));
-        fprintf(fid4,BranchLines);
+    if length(line)>6
+        if strcmp(line(1:7),'/SOURCE')
+            line=fgets(fid3);
+            fprintf(fid4,line);
+            BranchLines=fileread(strcat(codePath,'\','LightningBlockSources.txt'));
+            fprintf(fid4,BranchLines);
+        end
     end
 end
 fclose(fid4);

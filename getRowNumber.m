@@ -43,9 +43,9 @@ switch type
                 break;
             end
             rowNumber=rowNumber+1;
-        end     
+        end
 end
-
+fseek(fid1,0,-1);
 if rowNumber==0
     switch type
         case {'BRANCH','SWITCH','SOURCE'}
@@ -58,6 +58,9 @@ if rowNumber==0
                 end
                 if length(line)<13
                     line='*************';
+                end
+                if rowNumber==1202
+                    fprintf('found');
                 end
                 if (strcmp(line(firstCharacterPlace:firstCharacterPlace+length(toBus)-1),toBus)==1)&&(strcmp(line(secondCharacerPlace:secondCharacerPlace+length(fromBus)-1),fromBus)==1)
                     break;
