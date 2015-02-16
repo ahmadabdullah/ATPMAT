@@ -9,6 +9,22 @@ Go ahead and try:
 ```
 $ git clone https://ahmadmabdullah@bitbucket.org/ahmadmabdullah/atpmat.git/wiki
 ```
+## How to run
+
+The user will need to import one of the structures uploaded in the Tutorial folder. Then the user will need to write the following command:
+
+```
+$ BatchProcessATP(P, 'IEEE118.atp','D:\Path\To\ATPMAT', 'C:\Path\To\Output\Folder', 'C:\Path\To\ATP\File\To\Be\Simulated', 'D:\Path\To\ATP\Executables');
+```
+It should be noted that: 
+
+1. The extension .atp should exist in the file name.
+
+2. All paths must NOT be terminated by a back slash ('\'). 
+
+3. The drives C: or D: in the above code are  there for mere illustration purposes. Folders can be anywhere on the  user's hard drive. 
+
+
 
 ## Known Issues
 
