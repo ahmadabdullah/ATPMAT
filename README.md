@@ -44,6 +44,8 @@ Future versions will solve the above known issues.
 ## Executables needed for the toolbox
 The user will need the following ATP executable files: runATP.exe, runAF.exe, makeATP.exe, Pl42mat.exe
 
+Have fun!
+
 ## Google Tracking ID
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -55,5 +57,3 @@ The user will need the following ATP executable files: runATP.exe, runAF.exe, ma
   ga('send', 'pageview');
 
 </script>
-
-Have fun!
