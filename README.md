@@ -57,5 +57,3 @@ Have fun!
   ga('send', 'pageview');
 
 </script>
-
-</script>
